@@ -1,0 +1,17 @@
+
+{
+  "short_name": "8D Reports",
+  "name": "Problem Solving 8D",
+  "description": "An application to guide users through the 8D (Eight Disciplines) problem-solving process. Track, manage, and document corrective actions from planning to team recognition.",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0052cc",
+  "background_color": "#f4f5f7"
+}
