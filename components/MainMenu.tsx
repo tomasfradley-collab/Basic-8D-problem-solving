@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Report } from '../types';
 import { PlusIcon } from './icons';
@@ -52,6 +51,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ reports, onSelectReport, onC
                     <button
                         onClick={onCreateNew}
                         className="flex items-center bg-brand-primary text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+                        aria-label="Create new report"
                     >
                         <PlusIcon className="w-5 h-5 mr-2" />
                         Create New

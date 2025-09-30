@@ -1,4 +1,3 @@
-
 const CACHE_NAME = '8d-reports-cache-v1';
 // Add all files that are part of the app shell
 const urlsToCache = [
@@ -15,11 +14,13 @@ const urlsToCache = [
   '/components/DisciplineCard.tsx',
   '/components/MainMenu.tsx',
   '/components/ReportView.tsx',
+  '/components/AIAssistButton.tsx',
   // External assets
   'https://cdn.tailwindcss.com',
   'https://aistudiocdn.com/react-dom@^19.1.1/',
   'https://aistudiocdn.com/react@^19.1.1/',
-  'https://aistudiocdn.com/react@^19.1.1'
+  'https://aistudiocdn.com/react@^19.1.1',
+  'https://esm.sh/@google/genai'
 ];
 
 self.addEventListener('install', event => {

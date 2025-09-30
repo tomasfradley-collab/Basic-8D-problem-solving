@@ -1,13 +1,15 @@
 import React from 'react';
 import { Discipline } from '../types';
+import { AIAssistButton } from './AIAssistButton';
 
 interface DisciplineCardProps {
   discipline: Discipline;
+  reportTitle: string;
   reportCreatedAt: string;
   onUpdate: (field: keyof Discipline, value: string | boolean) => void;
 }
 
-export const DisciplineCard: React.FC<DisciplineCardProps> = ({ discipline, reportCreatedAt, onUpdate }) => {
+export const DisciplineCard: React.FC<DisciplineCardProps> = ({ discipline, reportTitle, reportCreatedAt, onUpdate }) => {
   const getRevisionDate = (days: number): Date | null => {
     if (!reportCreatedAt) return null;
     const date = new Date(reportCreatedAt);
@@ -29,6 +31,10 @@ export const DisciplineCard: React.FC<DisciplineCardProps> = ({ discipline, repo
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const handleAIStream = (chunk: string) => {
+    onUpdate('content', discipline.content + chunk);
   };
 
   return (
@@ -59,15 +65,27 @@ export const DisciplineCard: React.FC<DisciplineCardProps> = ({ discipline, repo
           </p>
         </div>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 relative">
         <textarea
           value={discipline.content}
           onChange={(e) => onUpdate('content', e.target.value)}
-          placeholder="Enter details here..."
+          placeholder="Enter details here, or use the AI assistant to get started!"
           rows={4}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          className="w-full p-2 pr-12 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
           disabled={discipline.completed}
         />
+        {!discipline.completed && (
+          <div className="no-print">
+            <AIAssistButton
+                reportTitle={reportTitle}
+                disciplineTitle={discipline.title}
+                disciplineDescription={discipline.description}
+                currentContent={discipline.content}
+                onStream={handleAIStream}
+                onDone={() => {}}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

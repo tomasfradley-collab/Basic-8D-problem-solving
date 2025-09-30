@@ -100,6 +100,7 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportData, onSave, onBa
           <DisciplineCard
             key={d.id}
             discipline={d}
+            reportTitle={report.title}
             reportCreatedAt={report.createdAt}
             onUpdate={(field, value) => handleDisciplineUpdate(index, field, value)}
           />
@@ -118,7 +119,11 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportData, onSave, onBa
                                 icon={<FileIcon className="mx-auto h-12 w-12 text-gray-400" />}
                             />
                         </div>
-                        <button onClick={() => handleRemoveEvidence(index)} className="no-print mt-7 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 self-start">
+                        <button 
+                            onClick={() => handleRemoveEvidence(index)} 
+                            className="no-print mt-7 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 self-start"
+                            aria-label={`Remove Evidence ${index + 1}`}
+                        >
                             <TrashIcon className="w-5 h-5"/>
                         </button>
                     </div>
