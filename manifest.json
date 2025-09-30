@@ -5,7 +5,7 @@
   "description": "An application to guide users through the 8D (Eight Disciplines) problem-solving process. Track, manage, and document corrective actions from planning to team recognition.",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "./vite.svg",
       "type": "image/svg+xml",
       "sizes": "any"
     }
