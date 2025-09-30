@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Report } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { MainMenu } from './components/MainMenu';
@@ -26,8 +25,7 @@ const App: React.FC = () => {
       return date;
   };
 
-  const handleSaveReport = (updatedReport: Report) => {
-    // Calculate the next upcoming revision date
+  const handleSaveReport = useCallback((updatedReport: Report) => {
     const findNextRevision = (report: Report): string | null => {
         const potentialDates: Date[] = [];
         
@@ -61,10 +59,11 @@ const App: React.FC = () => {
       }
       return [...prevReports, updatedReport];
     });
+  }, [setReports]);
 
-    setCurrentView('menu');
-    setSelectedReportId(null);
-  };
+  const handleDeleteReport = (reportId: string) => {
+      setReports(prevReports => prevReports.filter(r => r.id !== reportId));
+  }
 
   const handleBackToMenu = () => {
     setCurrentView('menu');
@@ -80,6 +79,7 @@ const App: React.FC = () => {
           reports={reports}
           onCreateNew={handleCreateNew}
           onSelectReport={handleSelectReport}
+          onDeleteReport={handleDeleteReport}
         />
       )}
       {currentView === 'report' && (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Report, Discipline, FileAttachment } from '../types';
 import { DisciplineCard } from './DisciplineCard';
 import { FileUpload } from './FileUpload';
@@ -25,6 +25,33 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportData, onSave, onBa
       nextRevisionDate: null,
     };
   });
+  
+  const [isSaving, setIsSaving] = useState(false);
+  const saveTimeoutRef = useRef<number | null>(null);
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    // On initial mount, don't save. On subsequent changes, auto-save.
+    if (isMounted.current) {
+      setIsSaving(true);
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      saveTimeoutRef.current = window.setTimeout(() => {
+        onSave(report);
+        setIsSaving(false);
+      }, 1000); // Debounce with 1s delay
+    } else {
+      isMounted.current = true;
+    }
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [report, onSave]);
+
 
   const handleDisciplineUpdate = (index: number, field: keyof Discipline, value: string | boolean) => {
     const newDisciplines = [...report.disciplines];
@@ -67,13 +94,18 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportData, onSave, onBa
               className="text-3xl font-bold bg-transparent text-brand-dark dark:text-white w-full focus:outline-none focus:ring-0 border-b-2 border-transparent focus:border-brand-primary"
             />
           </div>
-           <button
-              onClick={handlePrint}
-              className="no-print flex items-center bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 transition-colors ml-4"
-          >
-              <PrinterIcon className="w-5 h-5 mr-2" />
-              Print
-          </button>
+           <div className="no-print flex items-center">
+            <span className={`text-sm text-gray-500 dark:text-gray-400 mr-4 transition-opacity duration-300 ${isSaving ? 'opacity-100' : 'opacity-0'}`}>
+                Saving...
+            </span>
+            <button
+                onClick={handlePrint}
+                className="flex items-center bg-gray-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-gray-700 transition-colors"
+            >
+                <PrinterIcon className="w-5 h-5 mr-2" />
+                Print
+            </button>
+           </div>
         </div>
         
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6 print-container print-break-avoid">
@@ -132,15 +164,6 @@ export const ReportView: React.FC<ReportViewProps> = ({ reportData, onSave, onBa
             <button onClick={handleAddEvidence} className="no-print mt-4 text-brand-primary dark:text-sky-400 font-semibold hover:underline">
                 + Add Evidence
             </button>
-        </div>
-
-        <div className="flex justify-end mt-8 no-print">
-          <button
-            onClick={() => onSave(report)}
-            className="bg-brand-primary text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-colors transform hover:scale-105"
-          >
-            Save Report
-          </button>
         </div>
       </div>
     </div>
